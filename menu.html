@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Menú Principal</title>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --parchment:   #1a0e00;
+      --gold:        #c9933a;
+      --gold-light:  #f0c96e;
+      --gold-dark:   #7a5418;
+      --crimson:     #7a0b0b;
+      --stone:       #2e2014;
+      --text-light:  #f5e9c8;
+      --shadow:      rgba(0,0,0,0.85);
+    }
+
+    @keyframes flicker {
+      0%,100% { opacity:1; text-shadow: 0 0 18px var(--gold), 0 0 40px var(--gold-dark); }
+      45%      { opacity:.92; text-shadow: 0 0 10px var(--gold), 0 0 22px var(--gold-dark); }
+      50%      { opacity:.98; }
+      75%      { opacity:.95; text-shadow: 0 0 24px var(--gold-light), 0 0 50px var(--gold); }
+    }
+
+    @keyframes rise {
+      from { opacity:0; transform: translateY(30px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background:
+        radial-gradient(ellipse at center top, #3b1f00 0%, #0d0600 60%, #000 100%);
+      font-family: 'IM Fell English', serif;
+      overflow: hidden;
+    }
+
+    /* Torch glows in corners */
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      width: 260px; height: 260px;
+      border-radius: 50%;
+      pointer-events: none;
+      filter: blur(80px);
+      opacity: .45;
+    }
+    body::before {
+      top: -40px; left: -40px;
+      background: radial-gradient(circle, #d4720a 0%, transparent 70%);
+    }
+    body::after {
+      top: -40px; right: -40px;
+      background: radial-gradient(circle, #d4720a 0%, transparent 70%);
+    }
+
+    .panel {
+      position: relative;
+      width: 420px;
+      padding: 56px 44px 52px;
+      background: linear-gradient(160deg, #1f1208 0%, #110a02 100%);
+      border: 2px solid var(--gold-dark);
+      box-shadow:
+        0 0 0 1px #000,
+        0 0 0 4px var(--gold-dark),
+        0 0 0 5px #000,
+        0 0 60px rgba(180,100,10,.35),
+        inset 0 0 40px rgba(0,0,0,.6);
+      animation: rise .8s ease both;
+    }
+
+    /* Corner ornaments */
+    .panel::before, .panel::after,
+    .panel .corner-br, .panel .corner-bl {
+      content: '✦';
+      position: absolute;
+      font-size: 1.1rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .panel::before  { top:  10px; left:  10px; }
+    .panel::after   { top:  10px; right: 10px; }
+    .panel .corner-br { bottom: 10px; right: 10px; }
+    .panel .corner-bl { bottom: 10px; left:  10px; }
+
+    .crest {
+      text-align: center;
+      font-size: 2.8rem;
+      margin-bottom: 6px;
+      line-height: 1;
+    }
+
+    h1 {
+      text-align: center;
+      font-family: 'IM Fell English', serif;
+      font-size: 2rem;
+      letter-spacing: .12em;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      animation: flicker 4s infinite;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-style: italic;
+      font-size: .78rem;
+      color: var(--gold-dark);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-bottom: 36px;
+    }
+
+    hr.divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold-dark), transparent);
+      margin-bottom: 36px;
+    }
+
+    nav {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .btn {
+      position: relative;
+      display: block;
+      width: 100%;
+      padding: 14px 20px;
+      background: linear-gradient(135deg, #2c1a04 0%, #1a0d02 100%);
+      border: 1px solid var(--gold-dark);
+      color: var(--gold-light);
+      font-family: 'IM Fell English', serif;
+      font-size: 1.05rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .25s, color .25s, border-color .25s, box-shadow .25s, transform .15s;
+      box-shadow: 0 2px 10px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,220,120,.07);
+      outline: none;
+      overflow: hidden;
+    }
+
+    /* sword left + right decorations */
+    .btn span.icon-l,
+    .btn span.icon-r {
+      position: absolute;
+      top: 50%; transform: translateY(-50%);
+      font-size: .9rem;
+      color: var(--gold-dark);
+      transition: color .25s, opacity .25s;
+      opacity: .7;
+    }
+    .btn span.icon-l { left: 14px; }
+    .btn span.icon-r { right: 14px; }
+
+    .btn:hover, .btn:focus-visible {
+      background: linear-gradient(135deg, #4a2d06 0%, #2c1904 100%);
+      border-color: var(--gold-light);
+      color: #fff8e0;
+      box-shadow: 0 0 18px rgba(200,140,30,.45), 0 4px 16px rgba(0,0,0,.6);
+      transform: translateY(-2px);
+    }
+    .btn:hover span.icon-l,
+    .btn:hover span.icon-r,
+    .btn:focus-visible span.icon-l,
+    .btn:focus-visible span.icon-r {
+      color: var(--gold-light);
+      opacity: 1;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 6px rgba(0,0,0,.7);
+    }
+
+    .btn.danger {
+      border-color: #5a1010;
+      color: #e09090;
+    }
+    .btn.danger:hover, .btn.danger:focus-visible {
+      background: linear-gradient(135deg, #3d1008 0%, #200804 100%);
+      border-color: #c04040;
+      color: #ffd0d0;
+      box-shadow: 0 0 18px rgba(160,30,30,.5), 0 4px 16px rgba(0,0,0,.6);
+    }
+
+    .footer-text {
+      text-align: center;
+      margin-top: 32px;
+      font-size: .68rem;
+      letter-spacing: .22em;
+      color: var(--gold-dark);
+      text-transform: uppercase;
+      opacity: .6;
+    }
+  </style>
+</head>
+<body>
+
+<div class="panel">
+  <span class="corner-br">✦</span>
+  <span class="corner-bl">✦</span>
+
+  <div class="crest">⚔️</div>
+  <h1>victores coliseorum</h1>
+  <p><b class="subtitle">— Elige pugnam tuae, fortis —</b></p>
+  <i class="subtitle">— Elige tu batalla, valiente —</i>
+  <hr class="divider"/>
+
+  <nav>
+    <!-- JUGAR → game1.cs -->
+    <a class="btn" href="game1.cs">
+      <span class="icon-l">🗡</span>
+      Jugar
+      <span class="icon-r">🗡</span>
+    </a>
+
+    <!-- OPCIONES → options.html -->
+    <a class="btn" href="options.html">
+      <span class="icon-l">⚙</span>
+      Opciones
+      <span class="icon-r">⚙</span>
+    </a>
+
+    <!-- PLAYERS → players.html -->
+    <a class="btn" href="players.html">
+      <span class="icon-l">🛡</span>
+      Players
+      <span class="icon-r">🛡</span>
+    </a>
+
+    <!-- EXIT → cierra la ventana -->
+    <button class="btn danger" onclick="window.close()">
+      <span class="icon-l">💀</span>
+      Exit
+      <span class="icon-r">💀</span>
+    </button>
+  </nav>
+
+  <p class="footer-text">A Polero IV factum</p>
+</div>
+
+</body>
+</html>
